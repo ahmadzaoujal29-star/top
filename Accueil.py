@@ -16,8 +16,8 @@ from urllib.parse import urlparse, parse_qs
 # --- I. Configuration Globale ---
 
 st.set_page_config(
-    page_title="Tuteur IA Mathématiques (Système Marocain)",
-    layout="wide",
+page_title="Tuteur IA Mathématiques (Système Marocain)",
+        layout="wide",
     initial_sidebar_state="expanded"
 )
 
@@ -526,4 +526,5 @@ def settings_ui():
         on_change=lambda: update_preference('response_type'),
         help="Ceci définit la structure de l'aide fournie par
         
+
 
