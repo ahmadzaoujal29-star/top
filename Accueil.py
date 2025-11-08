@@ -171,7 +171,7 @@ def build_system_prompt():
         "Réponds IMPÉRATIVEMENT en utilisant une structure **Markdown** claire (titres, listes, gras). "
         "Toutes les expressions mathématiques complexes, symboles, formules ou équations doivent être écrites UNIQUEMENT en **LaTeX**. "
         "Utilise le format LaTeX : encadre les équations en ligne avec '$' et les blocs d'équations avec '$$'. "
-        "Il est INTERDIT d'utiliser du texte brut، des barres obliques (/) ou des accents circonflexes (^) pour représenter des fractions, des exposants ou des symboles mathématiques dans la réponse finale."
+        "Il est INTERDIT d'utiliser du texte brut، des barres obliques (/) أو des accents circonflexes (^) pour représenter des fractions, des exposants ou des symboles mathématiques dans la réponse finale."
     )
     
     # Instruction finale complète
@@ -488,11 +488,22 @@ def settings_ui():
     """Interface utilisateur pour gérer les préférences de l'utilisateur dans la sidebar."""
     st.sidebar.header("⚙️ Mes Préférences (AI Output)")
     
+    # 🌟 تطبيق المنطق الآمن لمعالجة ValueError 🌟
+    current_level = st.session_state.school_level
+    try:
+        default_index = MAROC_LEVELS.index(current_level)
+    except ValueError:
+        # إذا كانت القيمة المحفوظة غير صالحة، استخدم القيمة الافتراضية
+        default_index = len(MAROC_LEVELS) - 1 # آخر عنصر هو القيمة الافتراضية عند التسجيل
+        st.session_state.school_level = MAROC_LEVELS[default_index]
+        # **يمكن إضافة تحديث لقاعدة البيانات هنا لتصحيح القيمة، لكن نكتفي بتصحيح الجلسة مؤقتاً**
+
     # Niveau Scolaire
     st.sidebar.selectbox(
         "Niveau Scolaire (affecte la difficulté)",
         options=MAROC_LEVELS,
-        index=MAROC_LEVELS.index(st.session_state.school_level),
+        # استخدام الـ index الآمن
+        index=default_index,
         key="setting_school_level",
         on_change=lambda: update_preference('school_level')
     )
@@ -509,11 +520,21 @@ def settings_ui():
     )
     
     # Type de Réponse (Tidiness/Clarity)
+    # 🌟 تطبيق المنطق الآمن لنوع الاستجابة أيضاً 🌟
+    current_response_type = st.session_state.response_type
+    try:
+        default_response_index = list(RESPONSE_TYPES.keys()).index(current_response_type)
+    except ValueError:
+        default_response_index = 0 # القيمة الافتراضية: 'steps'
+        st.session_state.response_type = list(RESPONSE_TYPES.keys())[default_response_index]
+
+
     st.sidebar.selectbox(
         "Style de Réponse (affecte l'organisation)",
         options=list(RESPONSE_TYPES.keys()),
         format_func=lambda x: RESPONSE_TYPES[x],
-        index=list(RESPONSE_TYPES.keys()).index(st.session_state.response_type),
+        # استخدام الـ index الآمن
+        index=default_response_index,
         key="setting_response_type",
         on_change=lambda: update_preference('response_type'),
         help="Ceci définit la structure de l'aide fournie par l'IA (Étapes، مفهوم، أو إجابة نهائية)."
@@ -630,4 +651,3 @@ else:
 if st.session_state.should_rerun:
     st.session_state.should_rerun = False
     st.rerun()
-
