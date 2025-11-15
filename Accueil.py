@@ -157,7 +157,7 @@ def build_system_prompt():
     
     # Style de réponse (inclut des instructions de clarté spécifiques)
     if response_type == 'answer':
-        style_instruction = "Fournis uniquement la réponse finale et concise du problème, sans aucune explication détaillée ni étapes intermédiaires. Mets la réponse en gras et clairement en évidence."
+        style_instruction = "Fournis uniquement la réponse finale et concise du problème, sans aucune explication détaillée ni étapes intermédiaires. Mets la réponse en gras و clairement en évidence."
     elif response_type == 'concept':
         style_instruction = "Fournis une explication conceptuelle approfondie du problème ou du sujet. Concentre-toi sur les théories et les concepts impliqués, et utilise des sous-titres clairs pour séparer les notions."
     else: # 'steps' par défaut
@@ -650,4 +650,4 @@ else:
 # 3. Traitement de l'auto-rerun 
 if st.session_state.should_rerun:
     st.session_state.should_rerun = False
-    st.rerun()
+    st.rerun() # 🌟 تم الإصلاح هنا 🌟
