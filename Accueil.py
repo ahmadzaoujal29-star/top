@@ -16,7 +16,7 @@ from urllib.parse import urlparse, parse_qs
 # --- I. Configuration Globale ---
 
 st.set_page_config(
-    page_title="Tuteur IA Mathématiques (Système Marocain)",
+    page_title="Tuteur IA Mathématiques (Système Marocain) 🇲🇦", # 🎨 إضافة إيموجي
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -36,14 +36,14 @@ try:
     SUPABASE_KEY: str = st.secrets["SUPABASE_KEY"]
     SERVICE_KEY = st.secrets.get("SUPABASE_SERVICE_KEY")
 except KeyError as e:
-    st.error(f"Erreur de configuration: Clé manquante dans secrets.toml: {e}. L'application ne démarrera لا بشكل صحيح.")
+    st.error(f"❌ Erreur de configuration: Clé manquante dans secrets.toml: {e}. L'application ne démarrera لا بشكل صحيح.") # 🎨 إضافة إيموجي
     st.stop()
     
 # 🌟 تهيئة عميل Gemini SDK
 try:
     GEMINI_CLIENT = genai.Client(api_key=API_KEY)
 except Exception as e:
-    st.error(f"Erreur d'initialisation Gemini SDK: {e}")
+    st.error(f"💥 Erreur d'initialisation Gemini SDK: {e}") # 🎨 إضافة إيموجي
     st.stop()
 
 # قائمة المستويات التعليمية المغربية
@@ -57,9 +57,9 @@ MAROC_LEVELS = [
 
 # 🌟 الإضافة الجديدة: خيارات أنواع الاستجابة
 RESPONSE_TYPES = {
-    'steps': 'Étapes Détaillées (Didactique)',
-    'concept': 'Explication Conceptuelle (Théorie)',
-    'answer': 'Réponse Finale (Concise)'
+    'steps': 'Étapes Détaillées (Didactique) 🔢', # 🎨 إضافة إيموجي
+    'concept': 'Explication Conceptuelle (Théorie) 🧠', # 🎨 إضافة إيموجي
+    'answer': 'Réponse Finale (Concise) ✅' # 🎨 إضافة إيموجي
 }
 
 
@@ -78,7 +78,7 @@ try:
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
     users_table = supabase.table(SUPABASE_TABLE_NAME)
 except Exception as e:
-    st.error(f"Erreur d'initialisation Supabase: {e}")
+    st.error(f"💾 Erreur d'initialisation Supabase: {e}") # 🎨 إضافة إيموجي
     st.stop()
     
 # 3. Initialisation de l'État de la Session
@@ -93,7 +93,7 @@ if 'response_type' not in st.session_state: st.session_state.response_type = 'st
 if 'lang' not in st.session_state: st.session_state.lang = 'fr'
 
 
-# --- III. Fonctions de Base (Supabase & Crypto) ---
+# --- III. Fonctions de Base (Supabase & Crypto) 🔑 --- # 🎨 إضافة إيموجي
 
 def get_supabase_client(use_service_key: bool = False) -> Client:
     """Retourne le client Supabase standard ou le client avec clé de service."""
@@ -136,7 +136,7 @@ def update_user_data(email, data: dict, use_service_key=False):
         return False
 
 
-# --- IV. Logique de l'API Gemini ---
+# --- IV. Logique de l'API Gemini 🤖 --- # 🎨 إضافة إيموجي
 
 def build_system_prompt():
     """
@@ -165,8 +165,13 @@ def build_system_prompt():
 
     # Langue
     lang_instruction = "Tu dois répondre exclusivement en français." if lang == 'fr' else "Tu dois répondre exclusivement en arabe، في تنسيق (Markdown) وباستخدام المصطلحات الرياضية المعتادة في المغرب."
+    
+    # 🎨 التعديل الجديد والحاسم هنا
+    emoji_instruction = (
+        "**CRUCIAL:** Intègre des **émojis pertinents et visuellement attrayants** (comme ➕, ✖️, 💡, 📐, etc.) dans le corps de ta réponse pour la rendre plus engageante et claire. Place-les au début des points importants ou des sections."
+    )
 
-    # Instruction STRICTE de mise en forme (Tidiness/Clarity) 🌟 التعديل الحاسم الجديد 🌟
+    # Instruction STRICTE de mise en forme (Tidiness/Clarity) 🌟 
     formatting_instruction = (
         "Réponds IMPÉRATIVEMENT en utilisant une structure **Markdown** claire (titres, listes, gras). "
         "Utilise des titres de niveau 2 ('##') pour les sections principales et de niveau 3 ('###') pour les sous-sections. "
@@ -179,7 +184,7 @@ def build_system_prompt():
     
     # Instruction finale complète
     final_prompt = (
-        f"{base_prompt} {lang_instruction} {style_instruction} {formatting_instruction}"
+        f"{base_prompt} {lang_instruction} {style_instruction} {emoji_instruction} {formatting_instruction}"
     )
     return final_prompt
 
@@ -205,7 +210,7 @@ def call_gemini_api(prompt: str, uploaded_file=None):
         current_count = st.session_state.requests_today
 
         if current_count >= max_total_requests:
-            st.error(f"Limite atteinte: Vous avez atteint le maximum de requêtes ({max_total_requests}) pour aujourd'hui. Revenez demain!")
+            st.error(f"🛑 Limite atteinte: Vous avez atteint le maximum de requêtes ({max_total_requests}) pour aujourd'hui. Revenez demain!") # 🎨 إضافة إيموجي
             return "Limite de requêtes atteinte.", []
             
         st.session_state.requests_today = current_count + 1 # Incrément avant l'appel
@@ -221,7 +226,7 @@ def call_gemini_api(prompt: str, uploaded_file=None):
             image = Image.open(uploaded_file)
             contents.append(image)
         except Exception:
-            return "تعذّر معالجة الصورة. تأكد من أن التنسيق هو JPG أو PNG.", []
+            return "⚠️ تعذّر معالجة الصورة. تأكد من أن التنسيق هو JPG أو PNG.", [] # 🎨 إضافة إيموجي
     
     if prompt: 
         contents.append(prompt)
@@ -263,14 +268,14 @@ def call_gemini_api(prompt: str, uploaded_file=None):
         return generated_text, sources
 
     except APIError as e:
-        st.error(f"❌ Erreur API (Code {e.code}): {e.message}")
+        st.error(f"❌ Erreur API (Code {e.code}): {e.message}") # 🎨 إضافة إيموجي
         return f"Échec de l'API Gemini (Code {e.code}). Cause probable: {e.message}", []
         
     except Exception as e:
-        st.error(f"خطأ غير متوقع: {e}")
+        st.error(f"💥 خطأ غير متوقع: {e}") # 🎨 إضافة إيموجي
         return f"خطأ غير متوقع: {e}", []
 
-# --- V. Fonctions d'Authentification et de Session ---
+# --- V. Fonctions d'Authentification et de Session 👤 --- # 🎨 إضافة إيموجي
 
 def load_user_session(email, save_cookie=False):
     """Charge les données utilisateur et met à jour la session."""
@@ -312,10 +317,10 @@ def handle_login():
     user_data = get_user_by_email(email)
     
     if user_data and check_password(password, user_data.get('password_hash', '')):
-        st.success("Connexion réussie! Bienvenue.")
+        st.success("🎉 Connexion réussie! Bienvenue.") # 🎨 إضافة إيموجي
         load_user_session(email, save_cookie=True)
     else:
-        st.error("E-mail ou mot de passe incorrect.")
+        st.error("⚠️ E-mail ou mot de passe incorrect.") # 🎨 إضافة إيموجي
 
 def handle_register():
     """Gère l'inscription و Parrainage."""
@@ -328,14 +333,14 @@ def handle_register():
     selected_response_type = st.session_state.reg_response_type
     
     if password != confirm_password:
-        st.error("Les mots de passe ne correspondent pas.")
+        st.error("⚠️ Les mots de passe ne correspondent pas.") # 🎨 إضافة إيموجي
         return
     if len(password) < 6:
-        st.error("Le mot de passe doit contenir au moins 6 caractères.")
+        st.error("⚠️ Le mot de passe doit contenir au moins 6 caractères.") # 🎨 إضافة إيموجي
         return
         
     if get_user_by_email(email):
-        st.error("Cet e-mail est déjà enregistré. Veuillez vous connecter.")
+        st.error("⚠️ Cet e-mail est déjà enregistré. Veuillez vous connecter.") # 🎨 إضافة إيموجي
         return
 
     # Logique de Parrainage
@@ -354,7 +359,7 @@ def handle_register():
             
             # Utilisation de la clé de service pour l'opération d'écriture (plus sûr)
             if update_user_data(referrer_email, {'bonus_questions': new_bonus}, use_service_key=True):
-                st.info(f"Félicitations! Le parrain ({referrer_email}) a reçu {REFERRAL_BONUS} questions bonus.")
+                st.info(f"🌟 Félicitations! Le parrain ({referrer_email}) a reçu {REFERRAL_BONUS} questions bonus.") # 🎨 إضافة إيموجي
             
     # Sauvegarder le nouvel utilisateur
     new_user_data = {
@@ -372,19 +377,19 @@ def handle_register():
     
     try:
         users_table.insert([new_user_data]).execute()
-        st.success("Inscription et connexion réussيت! 🥳")
+        st.success("🚀 Inscription و connexion réussيت! 🥳") # 🎨 إضافة إيموجي
         load_user_session(email, save_cookie=True)
     except Exception as e:
-        st.error(f"Échec de l'inscription: {e}. (Vérifiez les règles RLS de Supabase.)")
+        st.error(f"❌ Échec de l'inscription: {e}. (Vérifiez les règles RLS de Supabase.)") # 🎨 إضافة إيموجي
 
 
-# --- VI. Interface Utilisateur (UI) ---
+# --- VI. Interface Utilisateur (UI) 🖥️ --- # 🎨 إضافة إيموجي
 
 def admin_dashboard_ui():
     """واجهة الإدارة تظهر فقط للبريد الإلكتروني المخصص."""
     st.sidebar.markdown("---")
     st.sidebar.subheader("👑 لوحة تحكم الإدارة")
-    st.sidebar.warning("هذا القسم مرئي فقط لك.")
+    st.sidebar.warning("🚨 هذا القسم مرئي فقط لك.") # 🎨 إضافة إيموجي
     
     st.sidebar.markdown(f"**بريد الإدارة:** `{ADMIN_EMAIL}`")
     
@@ -397,35 +402,35 @@ def admin_dashboard_ui():
         if update_user_data(ADMIN_EMAIL, {'is_unlimited': new_status}, use_service_key=True):
             st.session_state.is_unlimited = new_status
             st.session_state.should_rerun = True
-            st.sidebar.success(f"حالة الوصول غير المحدود: {'مُفعل' if new_status else 'مُلغى'}")
+            st.sidebar.success(f"حالة الوصول غير المحدود: {'✅ مُفعل' if new_status else '❌ مُلغى'}") # 🎨 إضافة إيموجي
         else:
-            st.sidebar.error("فشل التحديث. تأكد من إعداد SUPABASE_SERVICE_KEY.")
+            st.sidebar.error("💥 فشل التحديث. تأكد من إعداد SUPABASE_SERVICE_KEY.") # 🎨 إضافة إيموجي
             
     st.sidebar.markdown("---")
 
 
 def auth_ui():
     """Interface de connexion/inscription."""
-    st.header("🔑 Connexion / Inscription")
+    st.header("🔑 Connexion / Inscription") # 🎨 إضافة إيموجي
     st.markdown("---")
 
     col1, col2 = st.columns(2)
     
     with col1:
         with st.form("login_form"):
-            st.subheader("Se Connecter")
+            st.subheader("Se Connecter ➡️") # 🎨 إضافة إيموجي
             st.text_input("E-mail", key="login_email")
             st.text_input("Mot de passe", type="password", key="login_password")
             st.form_submit_button("Connexion", type="primary", on_click=handle_login)
 
     with col2:
         with st.form("register_form"):
-            st.subheader("S'inscrire")
+            st.subheader("S'inscrire 📝") # 🎨 إضافة إيموجي
             st.text_input("E-mail", key="reg_email")
             st.text_input("Mot de passe", type="password", key="reg_password")
             st.text_input("Confirmer le mot de passe", type="password", key="reg_password_confirm")
             
-            st.subheader("Vos Préférences (Initiales)")
+            st.subheader("Vos Préférences (Initiales) ⚙️") # 🎨 إضافة إيموجي
             
             # حقل المستوى الدراسي
             st.selectbox(
@@ -459,12 +464,12 @@ def auth_ui():
             if REFERRAL_PARAM in query_params:
                 ref_email = query_params.get(REFERRAL_PARAM)
                 if isinstance(ref_email, list): ref_email = ref_email[0]
-                st.info(f"Vous vous inscrivez via le lien de parrainage ({ref_email}). Votre parrain recevra un bonus!")
+                st.info(f"🔗 Vous vous inscrivez via le lien de parrainage ({ref_email}). Votre parrain recevra un bonus!") # 🎨 إضافة إيموجي
 
             st.form_submit_button("S'inscrire", type="secondary", on_click=handle_register)
 
 
-# --- NOUVEAU: Fonctions de l'interface d'édition des paramètres ---
+# --- NOUVEAU: Fonctions de l'interface d'édition des paramètres ⚙️ --- # 🎨 إضافة إيموجي
 
 def update_preference(key):
     """
@@ -479,13 +484,13 @@ def update_preference(key):
     
     if update_user_data(st.session_state.user_email, data_to_update):
         st.session_state.user_data[key] = new_value 
-        st.sidebar.success(f"Préférence mise à jour: {key}")
+        st.sidebar.success(f"✅ Préférence mise à jour: {key}") # 🎨 إضافة إيموجي
     else:
-        st.sidebar.error("Échec de la sauvegarde. Veuillez réessayer.")
+        st.sidebar.error("❌ Échec de la sauvegarde. Veuillez réessayer.") # 🎨 إضافة إيموجي
 
 def settings_ui():
     """Interface utilisateur pour gérer les préférences de l'utilisateur dans la sidebar."""
-    st.sidebar.header("⚙️ Mes Préférences (AI Output)")
+    st.sidebar.header("🛠️ Mes Préférences (AI Output)") # 🎨 إضافة إيموجي
     
     # 🌟 تطبيق المنطق الآمن لمعالجة ValueError 🌟
     current_level = st.session_state.school_level
@@ -499,7 +504,7 @@ def settings_ui():
 
     # Niveau Scolaire
     st.sidebar.selectbox(
-        "Niveau Scolaire (affecte la difficulté)",
+        "Niveau Scolaire (affecte la difficulté) 📚", # 🎨 إضافة إيموجي
         options=MAROC_LEVELS,
         # استخدام الـ index الآمن
         index=default_index,
@@ -509,7 +514,7 @@ def settings_ui():
     
     # Langue de Réponse
     st.sidebar.radio(
-        "Langue de Réponse",
+        "Langue de Réponse 🌐", # 🎨 إضافة إيموجي
         options=["fr", "ar"],
         format_func=lambda x: "Français 🇫🇷" if x == "fr" else "العربية 🇲🇦",
         key="setting_lang",
@@ -529,7 +534,7 @@ def settings_ui():
 
 
     st.sidebar.selectbox(
-        "Style de Réponse (affecte l'organisation)",
+        "Style de Réponse (affecte l'organisation) 📝", # 🎨 إضافة إيموجي
         options=list(RESPONSE_TYPES.keys()),
         format_func=lambda x: RESPONSE_TYPES[x],
         # استخدام الـ index الآمن
@@ -544,7 +549,7 @@ def settings_ui():
 def main_app_ui():
     """Interface principale de l'application (pour les utilisateurs connectés)."""
     
-    st.title("💡 Tuteur Mathématique Spécialisé (نظام المغرب)")
+    st.title("💡 Tuteur Mathématique Spécialisé (نظام المغرب) 🇲🇦") # 🎨 إضافة إيموجي
     st.markdown("---")
 
     st.markdown("أنا **مساعدك الذكي المتخصص**، جاهز لمساعدتك. يمكنك طرح سؤال أو **تحميل صورة** للتمرين.")
@@ -553,7 +558,7 @@ def main_app_ui():
     
     with col_upload:
         uploaded_file = st.file_uploader(
-            "Optionnel : Téléchargez une photo (JPG / PNG، max 4 Mo).",
+            "📷 Optionnel : Téléchargez une photo (JPG / PNG، max 4 Mo).", # 🎨 إضافة إيموجي
             type=["png", "jpg", "jpeg"],
             key="image_uploader"
         )
@@ -562,26 +567,26 @@ def main_app_ui():
             try:
                 uploaded_file.seek(0)
                 image = Image.open(BytesIO(uploaded_file.getvalue()))
-                st.image(image, caption='Image téléchargée.', use_column_width=True)
+                st.image(image, caption='🖼️ Image téléchargée.', use_column_width=True) # 🎨 إضافة إيموجي
             except Exception:
-                st.error("Erreur lors du chargement de l'image.")
+                st.error("❌ Erreur lors du chargement de l'image.") # 🎨 إضافة إيموجي
     
     with col_prompt:
         user_prompt = st.text_area(
-            "Ajoutez votre question ou votre instruction ici.",
+            "❓ Ajoutez votre question ou votre instruction ici.", # 🎨 إضافة إيموجي
             height=250,
             key="prompt_input"
         )
         
-        if st.button("Générer la Réponse Mathématique", use_container_width=True, type="primary"):
+        if st.button("🚀 Générer la Réponse Mathématique", use_container_width=True, type="primary"): # 🎨 إضافة إيموجي
             if not user_prompt and not uploaded_file:
-                st.warning("Veuillez entrer une question أو télécharger une image pour commencer.")
+                st.warning("☝️ Veuillez entrer une question أو télécharger une image pour commencer.") # 🎨 إضافة إيموجي
             else:
-                with st.spinner('L\'IA analyse et prépare la réponse...'):
+                with st.spinner('⏳ L\'IA analyse et prépare la réponse...'): # 🎨 إضافة إيموجي
                     # 🌟 لم نعد نستخدم streaming، بل نحصل على النص كاملاً
                     generated_text, sources = call_gemini_api(user_prompt, uploaded_file) 
                 
-                st.subheader("✅ Réponse Générée :")
+                st.subheader("✅ Réponse Générée :") # 🎨 إضافة إيموجي
                 
                 if generated_text and "Limite de requêtes atteinte" not in generated_text and "Échec de l'API Gemini" not in generated_text:
                     
@@ -589,12 +594,12 @@ def main_app_ui():
                     st.markdown(generated_text) 
                     
                     if sources:
-                        st.subheader("🌐 Sources Citées :")
+                        st.subheader("🌐 Sources Citées :") # 🎨 إضافة إيموجي
                         unique_sources = set((s['title'], s['uri']) for s in sources if s['uri'] and s['title'])
                         source_markdown = "\n".join([f"- [{title}]({uri})" for title, uri in unique_sources])
                         st.markdown(source_markdown)
                     else:
-                        st.caption("Aucune source de recherche externe n'a été utilisée pour cette réponse.")
+                        st.caption("ℹ️ Aucune source de recherche externe n'a été utilisée pour cette réponse.") # 🎨 إضافة إيموجي
                 else:
                     st.markdown(generated_text) # Affiche les messages d'erreur détaillés
 
@@ -602,9 +607,9 @@ def main_app_ui():
     max_total_requests = MAX_REQUESTS + st.session_state.user_data.get('bonus_questions', 0)
     requests_left = max_total_requests - st.session_state.requests_today
 
-    st.sidebar.header(f"Statut : {st.session_state.user_email}")
+    st.sidebar.header(f"👤 Statut : {st.session_state.user_email}") # 🎨 إضافة إيموجي
     st.sidebar.markdown(f"**Niveau Actuel:** {st.session_state.school_level}")
-    st.sidebar.markdown(f"**Bonus Affiliation:** {st.session_state.user_data.get('bonus_questions', 0)} questions")
+    st.sidebar.markdown(f"**Bonus Affiliation:** {st.session_state.user_data.get('bonus_questions', 0)} questions 🎁") # 🎨 إضافة إيموجي
     
     # عرض لوحة الإدارة 
     if st.session_state.user_email == ADMIN_EMAIL.lower():
@@ -615,7 +620,7 @@ def main_app_ui():
 
 
     if st.session_state.is_unlimited:
-        status_message = "✅ **Utilisation Illimitée (VIP)**"
+        status_message = "✨ **Utilisation Illimitée (VIP)**" # 🎨 إضافة إيموجي
         color = "#28a745"
     else:
         status_message = f"Requêtes restantes aujourd'hui: **{requests_left}** / {max_total_requests}"
@@ -635,7 +640,7 @@ def main_app_ui():
         st.session_state.should_rerun = True
 
 
-# --- VII. Contrôle du Flux الرئيسي ---
+# --- VII. Contrôle du Flux الرئيسي 🔄 --- # 🎨 إضافة إيموجي
 
 # 1. Vérification du Cookie au démarrage
 if st.session_state.auth_status == 'logged_out':
