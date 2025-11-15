@@ -166,19 +166,14 @@ def build_system_prompt():
     # Langue
     lang_instruction = "Tu dois répondre exclusivement en français." if lang == 'fr' else "Tu dois répondre exclusivement en arabe، في تنسيق (Markdown) وباستخدام المصطلحات الرياضية المعتادة في المغرب."
 
-   def build_system_prompt():
-    # ... (الكود السابق)
-
-    # Instruction STRICTE de mise en forme (Tidiness/Clarity)
+    # Instruction STRICTE de mise en forme (Tidiness/Clarity) 🌟 التعديل الجديد هنا 🌟
     formatting_instruction = (
         "Réponds IMPÉRATIVEMENT en utilisant une structure **Markdown** claire (titres, listes, gras). "
-        "**Laisse des sauts de ligne (espaces) clairs et visibles entre chaque paragraphe, titre, et bloc d'équations (LaTeX) pour maximiser la lisibilité.** " # 🌟 السطر الجديد
+        "**Laisse des sauts de ligne (espaces) clairs et visibles entre chaque paragraphe, titre, et bloc d'équations (LaTeX) pour maximiser la lisibilité.** " 
         "Toutes les expressions mathématiques complexes, symboles, formules ou équations doivent être écrites UNIQUEMENT en **LaTeX**. "
         "Utilise le format LaTeX : encadre les équations en ligne avec '$' et les blocs d'équations avec '$$'. "
         "Il est INTERDIT d'utiliser du texte brut، des barres obliques (/) أو des accents circonflexes (^) pour représenter des fractions, des exposants ou des symboles mathématiques dans la réponse finale."
     )
-    
-    # ... (بقية الكود)
     
     # Instruction finale complète
     final_prompt = (
@@ -657,4 +652,3 @@ else:
 if st.session_state.should_rerun:
     st.session_state.should_rerun = False
     st.rerun() # 🌟 تم الإصلاح هنا 🌟
-
