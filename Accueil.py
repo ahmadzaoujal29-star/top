@@ -166,11 +166,12 @@ def build_system_prompt():
     # Langue
     lang_instruction = "Tu dois répondre exclusivement en français." if lang == 'fr' else "Tu dois répondre exclusivement en arabe، في تنسيق (Markdown) وباستخدام المصطلحات الرياضية المعتادة في المغرب."
 
-    # Instruction STRICTE de mise en forme (Tidiness/Clarity) 🌟 التعديل الجديد والأكثر صرامة 🌟
+    # Instruction STRICTE de mise en forme (Tidiness/Clarity) 🌟 التعديل الحاسم الجديد 🌟
     formatting_instruction = (
         "Réponds IMPÉRATIVEMENT en utilisant une structure **Markdown** claire (titres, listes, gras). "
         "Utilise des titres de niveau 2 ('##') pour les sections principales et de niveau 3 ('###') pour les sous-sections. "
-        "**Il est crucial de laisser DEUX sauts de ligne consécutifs (c'est-à-dire une ligne vide) entre chaque titre, chaque paragraphe, et chaque bloc d'équations (LaTeX) pour garantir un espacement clair et une lisibilité maximale.** "
+        "**Il est crucial de laisser DEUX sauts de ligne consécutifs (c'est-à-dire une ligne vide) entre chaque titre, chaque paragraphe، وكل فقرة نصية مستقلة لضمان Espacement واضح و Lisibilité قصوى.** "
+        "**Interdiction مطلقة لاستخدام أي وسم HTML، بما في ذلك <br>, <p> أو <div>، لأغراض التنسيق أو التباعد. اعتمد فقط على فواصل أسطر Markdown.** " # 🛑 الإضافة الحاسمة هنا
         "Toutes les expressions mathématiques complexes, symboles, formules ou équations doivent être écrites UNIQUEMENT en **LaTeX**. "
         "Utilise le format LaTeX : encadre les équations en ligne avec '$' et les blocs d'équations avec '$$'. "
         "Il est INTERDIT d'utiliser du texte brut، des barres obliques (/) أو des accents circonflexes (^) pour représenter des fractions, des exposants ou des symboles mathématiques dans la réponse finale."
@@ -651,4 +652,4 @@ else:
 # 3. Traitement de l'auto-rerun 
 if st.session_state.should_rerun:
     st.session_state.should_rerun = False
-    st.rerun() # 🌟 تم الإصلاح هنا 🌟
+    st.rerun()
