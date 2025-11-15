@@ -36,7 +36,7 @@ try:
     SUPABASE_KEY: str = st.secrets["SUPABASE_KEY"]
     SERVICE_KEY = st.secrets.get("SUPABASE_SERVICE_KEY")
 except KeyError as e:
-    st.error(f"Erreur de configuration: Clé manquante dans secrets.toml: {e}. L'application ne démarrera pas correctement.")
+    st.error(f"Erreur de configuration: Clé manquante dans secrets.toml: {e}. L'application ne démarrera لا بشكل صحيح.")
     st.stop()
     
 # 🌟 تهيئة عميل Gemini SDK
@@ -159,17 +159,18 @@ def build_system_prompt():
     if response_type == 'answer':
         style_instruction = "Fournis uniquement la réponse finale et concise du problème, sans aucune explication détaillée ni étapes intermédiaires. Mets la réponse en gras و clairement en évidence."
     elif response_type == 'concept':
-        style_instruction = "Fournis une explication conceptuelle approfondie du problème ou du sujet. Concentre-toi sur les théories et les concepts impliqués, et utilise des sous-titres clairs pour séparer les notions."
+        style_instruction = "Fournis une explication conceptuelle approfondie du problème أو du sujet. Concentre-toi sur les théories et les concepts impliqués, et utilise des sous-titres clairs pour séparer les notions."
     else: # 'steps' par défaut
         style_instruction = "Fournis les étapes détaillées de résolution de manière structurée et méthodique, en utilisant une liste numérotée pour chaque étape majeure du raisonnement."
 
     # Langue
     lang_instruction = "Tu dois répondre exclusivement en français." if lang == 'fr' else "Tu dois répondre exclusivement en arabe، في تنسيق (Markdown) وباستخدام المصطلحات الرياضية المعتادة في المغرب."
 
-    # Instruction STRICTE de mise en forme (Tidiness/Clarity) 🌟 التعديل الجديد هنا 🌟
+    # Instruction STRICTE de mise en forme (Tidiness/Clarity) 🌟 التعديل الجديد والأكثر صرامة 🌟
     formatting_instruction = (
         "Réponds IMPÉRATIVEMENT en utilisant une structure **Markdown** claire (titres, listes, gras). "
-        "**Laisse des sauts de ligne (espaces) clairs et visibles entre chaque paragraphe, titre, et bloc d'équations (LaTeX) pour maximiser la lisibilité.** " 
+        "Utilise des titres de niveau 2 ('##') pour les sections principales et de niveau 3 ('###') pour les sous-sections. "
+        "**Il est crucial de laisser DEUX sauts de ligne consécutifs (c'est-à-dire une ligne vide) entre chaque titre, chaque paragraphe, et chaque bloc d'équations (LaTeX) pour garantir un espacement clair et une lisibilité maximale.** "
         "Toutes les expressions mathématiques complexes, symboles, formules ou équations doivent être écrites UNIQUEMENT en **LaTeX**. "
         "Utilise le format LaTeX : encadre les équations en ligne avec '$' et les blocs d'équations avec '$$'. "
         "Il est INTERDIT d'utiliser du texte brut، des barres obliques (/) أو des accents circonflexes (^) pour représenter des fractions, des exposants ou des symboles mathématiques dans la réponse finale."
@@ -181,11 +182,7 @@ def build_system_prompt():
     )
     return final_prompt
 
-def stream_text_simulation(text):
-    """Simule la frappe de texte pour une meilleure UX."""
-    for chunk in text.split():
-        yield chunk + " "
-        time.sleep(0.02)
+# ❌ تم حذف دالة stream_text_simulation() لأنها تتعارض مع عرض تنسيق Markdown بشكل صحيح.
 
 # 🌟 دالة call_gemini_api المُحدَّثة لاستخدام SDK 🌟
 def call_gemini_api(prompt: str, uploaded_file=None):
@@ -580,12 +577,15 @@ def main_app_ui():
                 st.warning("Veuillez entrer une question أو télécharger une image pour commencer.")
             else:
                 with st.spinner('L\'IA analyse et prépare la réponse...'):
-                    generated_text, sources = call_gemini_api(user_prompt, uploaded_file)
+                    # 🌟 لم نعد نستخدم streaming، بل نحصل على النص كاملاً
+                    generated_text, sources = call_gemini_api(user_prompt, uploaded_file) 
                 
                 st.subheader("✅ Réponse Générée :")
                 
                 if generated_text and "Limite de requêtes atteinte" not in generated_text and "Échec de l'API Gemini" not in generated_text:
-                    st.write_stream(stream_text_simulation(generated_text))
+                    
+                    # 🌟 عرض النص باستخدام st.markdown مباشرةً لضمان احترام تنسيق Markdown و فواصل الأسطر.
+                    st.markdown(generated_text) 
                     
                     if sources:
                         st.subheader("🌐 Sources Citées :")
