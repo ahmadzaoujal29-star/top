@@ -164,7 +164,7 @@ def build_system_prompt():
         style_instruction = "Fournis les étapes détaillées de résolution de manière structurée et méthodique, en utilisant une liste numérotée pour chaque étape majeure du raisonnement."
 
     # Langue
-    lang_instruction = "Tu dois répondre exclusivement en français." if lang == 'fr' else "Tu dois répondre exclusivement en arabe, au format (Markdown) et en utilisant les termes mathématiques habituels au Maroc."
+    lang_instruction = "Tu dois répondre exclusivement en français." if lang == 'fr' else "Tu dois répondre exclusivement en arabe، بالإنجليزية: (Markdown) et en utilisant les termes mathématiques habituels au Maroc."
     
     # Emojis
     emoji_instruction = (
@@ -175,11 +175,11 @@ def build_system_prompt():
     formatting_instruction = (
         "Réponds IMPÉRATIVEMENT en utilisant une structure **Markdown** claire (titres, listes, gras). "
         "Utilise des titres de niveau 2 ('##') pour les sections principales et de niveau 3 ('###') pour les sous-sections. "
-        "**Il est crucial de laisser DEUX sauts de ligne consécutifs (c'est-à-dire une ligne vide) entre chaque titre, chaque paragraphe, et chaque bloc de texte indépendant pour assurer un espacement clair et une lisibilité maximale.** "
-        "**Interdiction absolue d'utiliser des balises HTML, y compris <br>, <p> ou <div>, pour le formatage ou l'espacement. Fais confiance uniquement aux sauts de ligne Markdown.** " 
-        "Toutes les expressions mathématiques complexes, symboles, formules ou équations doivent être écrites UNIQUEMENT en **LaTeX**. "
+        "**Il est crucial de laisser DEUX sauts de ligne consécutifs (c'est-à-dire une ligne vide) entre chaque titre، chaque paragraphe، et chaque bloc de texte indépendant pour assurer un espacement clair et une lisibilité maximale.** " 
+        "**Interdiction absolue d'utiliser des balises HTML، y compris <br>، <p> ou <div>، pour le formatage ou l'espacement. Fais confiance uniquement aux sauts de ligne Markdown.** " 
+        "Toutes les expressions mathématiques complexes، symboles، formules ou équations doivent être écrites UNIQUEMENT en **LaTeX**. "
         "Utilise le format LaTeX : encadre les équations en ligne avec '$' et les blocs d'équations avec '$$'. "
-        "Il est INTERDIT d'utiliser du texte brut, des barres obliques (/) ou des accents circonflexes (^) pour représenter des fractions, des exposants ou des symboles mathématiques dans la réponse finale."
+        "Il est INTERDIT d'utiliser du texte brut، des barres obliques (/) ou des accents circonflexes (^) pour représenter des fractions، des exposants ou des symboles mathématiques dans la réponse finale."
     )
     
     # Instruction finale complète
@@ -444,7 +444,7 @@ def auth_ui():
                 horizontal=True
             )
             
-            # Type de réponse
+            # Type de Réponse
             st.selectbox(
                 "Type de Réponse par Défaut",
                 options=list(RESPONSE_TYPES.keys()),
@@ -462,9 +462,12 @@ def auth_ui():
 
             st.form_submit_button("S'inscrire", type="secondary", on_click=handle_register)
 
-        # 🌟 AJOUT DEMANDÉ : Vidéo et texte "Watch and Learn"
+        # 🌟 MODIFICATION DEMANDÉE : Vidéo avec nouvelle phrase de promotion
         st.markdown("---")
-        st.markdown("🎥 **Regardez et apprenez comment utiliser l'application :**")
+        st.markdown(
+            "🎥 **تعلم كيفية استخدام التطبيق في دقيقتين واشترك لدعمنا!** "
+            "Apprenez à utiliser l'application en 2 minutes et abonnez-vous pour nous soutenir."
+        )
         try:
             st.video("https://www.youtube.com/watch?v=ZBAjwv8nu8A")
         except Exception as e:
@@ -619,19 +622,15 @@ def main_app_ui():
     </div>
     """, unsafe_allow_html=True)
     
-    # 🌟 AJOUT DEMANDÉ : Informations de contact WhatsApp
+    # 🌟 MODIFICATION سابقة/تعديل: Informations de contact WhatsApp (juste au-dessus du bouton de déconnexion)
     st.sidebar.markdown("---")
-    st.sidebar.subheader("📞 Contactez-nous")
-    st.sidebar.markdown("Pour plus d'informations :")
-    # Lien WhatsApp cliquable pour une meilleure expérience utilisateur
-    st.sidebar.markdown("📱 **WhatsApp :** [06 98 18 35 34](https://wa.me/212698183534)")
+    st.sidebar.markdown(
+        f"Pour toute question، contactez-nous sur **WhatsApp** au **[06 98 18 35 34](https://wa.me/212698183534)** 📱."
+    )
     
     st.sidebar.markdown("---")
-    if st.sidebar.button("Déconnexion 🚪"):
+    if st.sidebar.button("Déconnexion 🚪", use_container_width=True): # Ajout use_container_width=True pour esthétique
         cookies[COOKIE_KEY_EMAIL] = ""
         cookies.save()
         st.session_state.auth_status = 'logged_out'
         st.session_state.should_rerun = True
-
-
-# --- VII. Contrôle du
