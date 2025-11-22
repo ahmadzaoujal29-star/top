@@ -374,7 +374,7 @@ def handle_register():
     
     try:
         users_table.insert([new_user_data]).execute()
-        st.success("🚀 Inscription et connexion réussies! 🥳") 
+        st.success("🚀 Inscription et connexion réussيت! 🥳") 
         load_user_session(email, save_cookie=True)
     except Exception as e:
         st.error(f"❌ Échec de l'inscription: {e}. (Vérifiez les règles RLS de Supabase.)") 
@@ -634,3 +634,23 @@ def main_app_ui():
         cookies.save()
         st.session_state.auth_status = 'logged_out'
         st.session_state.should_rerun = True
+
+# --- VII. Main Execution Flow ---
+    
+# 1. Check for cookie on first load
+if st.session_state.auth_status == 'logged_out' and COOKIE_KEY_EMAIL in cookies:
+    email = cookies[COOKIE_KEY_EMAIL]
+    if email:
+        # Attempt to load session from cookie without saving the cookie again immediately
+        load_user_session(email, save_cookie=False) 
+
+# 2. Display the correct interface
+if st.session_state.auth_status == 'logged_in':
+    main_app_ui()
+else:
+    auth_ui()
+    
+# 3. Handle Reruns after state change (login/logout/pref update)
+if st.session_state.should_rerun:
+    st.session_state.should_rerun = False
+    st.rerun()
